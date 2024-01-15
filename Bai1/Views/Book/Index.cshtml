@@ -1,0 +1,118 @@
+﻿
+@model PagedList.IPagedList<Bai1.Models.Book>
+@using PagedList.Mvc
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Danh Sách Book</h2>
+
+<p>
+    @Html.ActionLink("Thêm Sách Mới", "Create", null, new { @class = "btn btn-warning" })
+    @using (Html.BeginForm("SearchBook", "Book", FormMethod.Get, new { @class = "form_inline" }))
+    {
+        <div class="form-group">
+            <label>Chủ đề: </label>
+            @Html.DropDownList("CategoryID", null, "Chọn Thể Loại", new { @class = "form-control" })
+            <label> Tên sách: </label>
+            <input type="text" class="form_control mx-sm-3" value="@ViewBag.Keyword"
+                   name="searchString" placeholder=" Nhập tên sách cần tìm" />
+            <input type="submit" class="btn btn-danger" value="Tìm sách" />
+
+        </div><hr />
+    }
+</p>
+<table class="table">
+    <tr>
+        @*<th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Images)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Published)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ViewCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Author.AuthorName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category.CategoryName)
+            </th>*@
+
+        <th style="width:200px">Tên Sách</th>
+        <th>Giá</th>
+        <th>Hình ảnh</th>
+        <th>Mô tả</th>
+        <th>Ngày xuất bản</th>
+        <th>Lượt xem</th>
+        <th>Tên tác giả</th>
+        <th>Thể loại</th>
+        <th>Sửa | Xem | Xóa</th>
+
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @*@Html.DisplayFor(modelItem => item.Images)*@
+
+                <img src="~/bookimages/@item.Images" width="150" height="150" />
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Published)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ViewCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author.AuthorName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.CategoryName)
+            </td>
+            <td>
+                @Html.ActionLink("Sửa", "Edit", new { id = item.BookID }) |
+                @Html.ActionLink("Chi Tiết", "Details", new { id = item.BookID }) |
+                @Html.ActionLink("Xóa", "Delete", new { id = item.BookID })
+            </td>
+        </tr>
+    }
+
+</table>
+
+<br />
+<br />
+@*Thêm Phân Trang*@
+Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) / @Model.PageCount @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+new PagedListRenderOptions
+{
+UlElementClasses = new string[] { "pagination" }, // Add classes to the <ul> element
+LiElementClasses = new string[] { "page-item" }, // Add classes to the <li> elements
+
+
+})
+
+@*Kết Thúc Phân Trang*@
